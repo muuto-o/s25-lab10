@@ -1,75 +1,256 @@
-/* Task 2: 
-Enhance User Experience by adding visual highlights to selected answers
-Hint: You can use the className attribute for highlighting*/
-.selected {
-    cursor: pointer; /* Change cursor on hover for interactivity */
+/* Bright Color Quiz CSS */
+:root {
+  --primary: #ff3e4d; /* Vibrant red */
+  --secondary: #00cec9; /* Bright teal */
+  --accent: #fdcb6e; /* Sunny yellow */
+  --option1: #ff7675; /* Coral */
+  --option2: #74b9ff; /* Sky blue */
+  --option3: #55e6c1; /* Mint */
+  --option4: #a29bfe; /* Lavender */
+  --dark: #2d3436;
+  --light: #f5f6fa;
+  --glass: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(135deg, #ff3e4d, #fdcb6e);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--dark);
+}
+
+/* Quiz Container */
+.quiz-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px;
+  padding: 30px;
+  background: var(--glass);
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Question Card */
+.question-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.question-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.question-text {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--dark);
+}
+
+/* Options Grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.option-card {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+}
+
+/* Color-coded options */
+.option-1 {
+  background: var(--option1);
+  color: white;
+}
+.option-2 {
+  background: var(--option2);
+  color: white;
+}
+.option-3 {
+  background: var(--option3);
+  color: var(--dark);
+}
+.option-4 {
+  background: var(--option4);
+  color: white;
+}
+
+.option-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.option-card.selected {
+  border: 2px solid white;
+  box-shadow: 0 0 0 3px var(--primary), 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+}
+
+.option-letter {
+  font-size: 18px;
+  font-weight: 700;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.option-card.selected .option-letter {
+  background: white;
+  color: var(--dark);
+}
+
+.option-text {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Submit Button */
+.submit-button {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: not-allowed;
+  transition: all 0.3s ease;
+}
+
+.submit-button.active {
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 62, 77, 0.4);
+}
+
+.submit-button:hover.active {
+  background: #ff1e30;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 62, 77, 0.5);
+}
+
+/* Score Screen */
+.score-screen {
+  text-align: center;
+  padding: 40px;
+}
+
+.score-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: var(--primary);
+}
+
+.score-value {
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 20px 0;
+  line-height: 1;
+}
+
+.score-value span {
+  font-size: 24px;
+  color: var(--dark);
+}
+
+.retry-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 62, 77, 0.4);
+}
+
+.retry-button:hover {
+  background: #ff1e30;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 62, 77, 0.5);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .options-grid {
+    grid-template-columns: 1fr;
   }
-  
-  /* Additional styling for better user experience */
-  .selected:hover {
-    cursor: pointer;
-  }
-  
-  
-  /* Container styles */
-  div {
-    background-color: #f7f7f7;
+
+  .quiz-container {
     padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 400px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
+    margin: 10px;
+    border-radius: 16px;
   }
-  
-  /* Header styles */
-  h2 {
-    font-size: 24px;
-    margin: 0;
+
+  .question-text {
+    font-size: 20px;
   }
-  
-  /* Question styles */
-  p {
-    font-size: 18px;
-    margin: 10px 0;
+
+  .score-value {
+    font-size: 60px;
   }
-  
-  /* Answer Options styles */
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    cursor: pointer;
-    font-size: 16px;
-    padding: 8px;
-    margin: 4px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  /* Submit button styles */
-  button {
-    background-color: #3498db;
-    color: white;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    margin: 10px 10px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  button:hover {
-    background-color: #1f77c5;
-  }
-  
-  /* Score styles */
-  p {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 10px 0;
-  }
-  
+}

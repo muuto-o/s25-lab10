@@ -1,72 +1,99 @@
-import React, { useState } from 'react'
-import './Quiz.css'
-import QuizQuestion from '../core/QuizQuestion';
+import React, { useState } from "react";
+import "./Quiz.css";
+import QuizCore from "../core/QuizCore";
 
-interface QuizState {
-  questions: QuizQuestion[]
-  currentQuestionIndex: number
-  selectedAnswer: string | null
-  score: number
-}
+const quizCore = new QuizCore();
 
 const Quiz: React.FC = () => {
-  const initialQuestions: QuizQuestion[] = [
-    {
-      question: 'What is the capital of France?',
-      options: ['London', 'Berlin', 'Paris', 'Madrid'],
-      correctAnswer: 'Paris',
-    },
-  ];
-  const [state, setState] = useState<QuizState>({
-    questions: initialQuestions,
-    currentQuestionIndex: 0,  // Initialize the current question index.
-    selectedAnswer: null,  // Initialize the selected answer.
-    score: 0,  // Initialize the score.
-  });
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [showScore, setShowScore] = useState(false);
 
-  const handleOptionSelect = (option: string): void => {
-    setState((prevState) => ({ ...prevState, selectedAnswer: option }));
-  }
+  const currentQuestion = quizCore.getCurrentQuestion();
 
+  const handleOptionSelect = (option: string) => {
+    setSelectedAnswer(option);
+  };
 
-  const handleButtonClick = (): void => {
-    // Task3: Implement the logic for button click, such as moving to the next question.
-  } 
+  const handleButtonClick = () => {
+    if (selectedAnswer) {
+      quizCore.answerQuestion(selectedAnswer);
+    }
 
-  const { questions, currentQuestionIndex, selectedAnswer, score } = state;
-  const currentQuestion = questions[currentQuestionIndex];
+    if (quizCore.hasNextQuestion()) {
+      quizCore.nextQuestion();
+      setSelectedAnswer(null);
+    } else {
+      setShowScore(true);
+    }
+  };
 
-  if (!currentQuestion) {
+  if (showScore) {
     return (
-      <div>
-        <h2>Quiz Completed</h2>
-        <p>Final Score: {score} out of {questions.length}</p>
+      <div className="quiz-container score-screen">
+        <h2 className="score-title">Quiz Completed!</h2>
+        <div className="score-value">
+          {quizCore.getScore()}
+          <span>/{quizCore.getTotalQuestions()}</span>
+        </div>
+        <button
+          className="retry-button"
+          onClick={() => window.location.reload()}
+        >
+          Play Again
+        </button>
       </div>
     );
   }
 
   return (
-    <div>
-      <h2>Quiz Question:</h2>
-      <p>{currentQuestion.question}</p>
-    
-      <h3>Answer Options:</h3>
-      <ul>
-        {currentQuestion.options.map((option) => (
-          <li
+    <div className="quiz-container">
+      <div className="progress-bar">
+        <div
+          className="progress-fill"
+          style={{
+            width: `${
+              (quizCore.getCurrentQuestionIndex() /
+                quizCore.getTotalQuestions()) *
+              100
+            }%`,
+          }}
+        ></div>
+      </div>
+
+      <div className="question-card">
+        <div className="question-number">
+          Question {quizCore.getCurrentQuestionIndex() + 1} of{" "}
+          {quizCore.getTotalQuestions()}
+        </div>
+        <h2 className="question-text">{currentQuestion?.question}</h2>
+      </div>
+
+      <div className="options-grid">
+        {currentQuestion?.options.map((option, index) => (
+          <div
             key={option}
+            className={`option-card ${
+              selectedAnswer === option ? "selected" : ""
+            } option-${index + 1}`}
             onClick={() => handleOptionSelect(option)}
-            className={selectedAnswer === option ? 'selected' : ''}
           >
-            {option}
-          </li>
+            <div className="option-content">
+              <span className="option-letter">
+                {String.fromCharCode(65 + index)}
+              </span>
+              <span className="option-text">{option}</span>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
 
-      <h3>Selected Answer:</h3>
-      <p>{selectedAnswer ?? 'No answer selected'}</p>
-
-      <button onClick={handleButtonClick}>Next Question</button>
+      <button
+        className={`submit-button ${selectedAnswer ? "active" : ""}`}
+        onClick={handleButtonClick}
+        disabled={!selectedAnswer}
+      >
+        {quizCore.hasNextQuestion() ? "Next Question" : "Submit Quiz"}
+      </button>
     </div>
   );
 };

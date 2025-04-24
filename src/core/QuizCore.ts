@@ -74,6 +74,14 @@ class QuizCore {
   }
 
   /**
+   * Get the current question's index.
+   * @returns The current question's index.
+   */
+  public getCurrentQuestionIndex():number{
+    return this.currentQuestionIndex;
+  }
+
+  /**
    * Get the total number of questions in the quiz.
    * @returns The total number of questions.
    */
